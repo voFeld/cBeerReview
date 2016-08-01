@@ -1,11 +1,13 @@
 var beers = [];
+var ratings = [];
 
-var addBeer = function (name, category) {
+var addBeer = function (name, category, rating) {
 
 
     var beer = {
         name: name,
-        category: category
+        category: category,
+        rating: rating
     };
 
     beers.push(beer);
@@ -18,8 +20,9 @@ $('.post-beer').on('click', function(e) {
     e.preventDefault();
     var userInput = $('.user-input').val();
     var beerInput = $('.beer-input').val();
+    var ratingInput = $('.rating-input').val();
 
-    addBeer(userInput,beerInput);
+    addBeer(userInput,beerInput,ratingInput);
     updateBeers();
 });
 
@@ -27,8 +30,27 @@ var updateBeers = function(){
     $('.beers-list').find('li').remove();
 
     for(var i = 0; i < beers.length; i++) {
-        $('.beers-list').append('<li>' + beers[i].name + '\: ' + beers[i].category + '</li>');
+        $('.beers-list').append('<li>' + beers[i].name + '\: ' + beers[i].category + ' ' + beers[i].rating + '</li>');
     }
 };
 
-// Add another select to your form so that users can rate each beer from 0 to 5. Append the new information to the page.
+var clicked = 0;
+
+$('.item-sort').on('click', function(e){
+    e.preventDefault();
+    $('.beers-list').find('li').remove();
+
+    if(clicked === 0) {
+        clicked = 1;
+        beers = beers.sort(function (a, b) {
+            return a.rating.localeCompare(b.rating);
+        });
+    } else {
+        clicked = 0;
+        beers = beers.sort(function (a, b) {
+            return b.rating.localeCompare(a.rating);
+        });
+    }
+
+    updateBeers();
+});
